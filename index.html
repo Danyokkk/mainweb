@@ -1,90 +1,353 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>DANIK</title>
-  <!-- Montserrat Font -->
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800&display=swap" rel="stylesheet">
+
+  <!-- Montserrat Extra Bold (900) -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&display=swap" rel="stylesheet">
+
   <style>
-    body {
-      margin: 0;
-      padding: 0;
-      background-color: #000; /* Black background */
-      color: #fff; /* White text */
-      font-family: 'Montserrat', sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      text-align: center;
+    /* ========== VARIABLES ========== */
+    :root{
+      --bg:#000;
+      --fg:#fff;
+      --muted: rgba(255,255,255,0.07);
+      --radius:16px;
+      --transition: 400ms cubic-bezier(.2,.9,.2,1);
     }
 
-    h1 {
-      font-size: 5rem;
-      font-weight: 800; /* Extra Bold */
-      margin-bottom: 20px;
-      letter-spacing: 3px;
+    /* ====== BASIC RESET & LAYOUT ====== */
+    *{box-sizing:border-box}
+    html,body{height:100%;scroll-behavior:smooth} /* smooth scrolling */
+    body{
+      margin:0;
+      font-family:'Montserrat', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background:var(--bg);
+      color:var(--fg);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      text-rendering:optimizeLegibility;
+      overflow-x:hidden;
+      letter-spacing:2px;
+      text-transform:uppercase; /* ALL CAPS */
     }
 
-    a {
-      color: #fff;
-      text-decoration: none;
-      font-size: 1.2rem;
-      border: 2px solid #fff;
-      padding: 10px 20px;
-      border-radius: 10px;
-      transition: background 0.3s, color 0.3s;
-      display: inline-block;
-      margin-bottom: 30px;
-      font-weight: 800;
+    /* CENTERED SCAFFOLD */
+    .wrap{
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:28px;
+      padding:48px 24px;
+      position:relative;
+      z-index:1;
     }
 
-    a:hover {
-      background: #fff;
-      color: #000;
+    /* BACKDROP GRAIN (subtle texture) */
+    .grain{
+      pointer-events:none;
+      position:fixed;
+      inset:0;
+      background-image:radial-gradient(var(--muted) 1px, transparent 1px);
+      background-size:6px 6px;
+      opacity:0.45;
+      mix-blend-mode:overlay;
+      z-index:0;
     }
 
-    iframe {
-      width: 80vw;
-      height: 45vw; /* 16:9 ratio */
-      max-width: 1000px;
-      max-height: 562px;
-      border: 3px solid #fff;
-      border-radius: 15px;
-      box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
-      margin-bottom: 20px;
+    /* HEADER */
+    h1{
+      margin:0;
+      font-weight:900;
+      font-size:clamp(48px,10vw,120px);
+      line-height:0.9;
+      letter-spacing:6px;
+      transform:translateY(0);
+      will-change:transform,opacity;
+      opacity:0;
+      transition:var(--transition);
+      text-align:center;
+      z-index:2;
+      text-shadow: 0 0 6px rgba(255,255,255,0.03);
     }
 
-    p {
-      font-size: 0.9rem;
-      font-weight: 800;
-      letter-spacing: 2px;
-      margin-top: 20px;
-      animation: glow 2s infinite alternate;
+    /* EMAIL BUTTON */
+    .cta{
+      font-weight:900;
+      font-size:16px;
+      padding:12px 26px;
+      border-radius:999px;
+      border:2px solid var(--fg);
+      text-decoration:none;
+      color:var(--fg);
+      display:inline-flex;
+      gap:12px;
+      align-items:center;
+      transform:translateY(0);
+      opacity:0;
+      transition: var(--transition);
+      z-index:2;
+      background:transparent;
     }
 
-    @keyframes glow {
-      from {
-        text-shadow: 0 0 5px #fff, 0 0 10px #fff;
-      }
-      to {
-        text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff;
-      }
+    .cta:focus{outline:3px solid rgba(255,255,255,0.12); outline-offset:6px}
+    .cta:hover{ background:var(--fg); color:var(--bg); transform:translateY(-6px) scale(1.01) }
+
+    /* VIDEO CARD */
+    .video-wrap{
+      width:90vw;
+      max-width:1200px;
+      aspect-ratio:16/9;
+      background:transparent;
+      border-radius:var(--radius);
+      padding:6px;
+      border:3px solid var(--fg);
+      box-shadow: 0 10px 40px rgba(255,255,255,0.04);
+      transform-style:preserve-3d;
+      transition: transform 600ms cubic-bezier(.2,.9,.2,1), box-shadow 400ms;
+      will-change:transform;
+      opacity:0;
     }
+
+    /* iframe full bleed inside card */
+    .video-wrap iframe{
+      width:100%;
+      height:100%;
+      border-radius:calc(var(--radius) - 6px);
+      border:0;
+      display:block;
+      background:#000;
+    }
+
+    .video-wrap:focus-within,
+    .video-wrap:hover{
+      transform: translateY(-14px) rotateX(2deg) rotateY(2deg) scale(1.01);
+      box-shadow: 0 30px 80px rgba(255,255,255,0.06);
+    }
+
+    /* FOOTER "MADE BY DANIK" with glow animation */
+    .made{
+      font-weight:900;
+      font-size:13px;
+      letter-spacing:4px;
+      margin-top:6px;
+      z-index:2;
+      opacity:0;
+      transform:translateY(0);
+      transition:var(--transition);
+    }
+
+    /* glow animation */
+    @keyframes pulseGlow {
+      0%{ text-shadow: 0 0 6px rgba(255,255,255,0.06); transform:scale(1) }
+      50%{ text-shadow: 0 0 14px rgba(255,255,255,0.14), 0 0 30px rgba(255,255,255,0.06); transform:scale(1.015) }
+      100%{ text-shadow: 0 0 6px rgba(255,255,255,0.06); transform:scale(1) }
+    }
+    .made.glow{ animation: pulseGlow 2.2s ease-in-out infinite; }
+
+    /* small helper text + fallback link */
+    .fallback{
+      font-size:12px;
+      opacity:0.6;
+      margin-top:6px;
+      text-decoration:underline;
+      color:var(--fg);
+    }
+
+    /* ========== CUSTOM CURSOR ========== */
+    .cursor {
+      --size: 22px;
+      position: fixed;
+      top:0; left:0;
+      width:var(--size);
+      height:var(--size);
+      border-radius:50%;
+      transform:translate(-50%,-50%) scale(1);
+      pointer-events:none;
+      z-index:9999;
+      transition: width 200ms, height 200ms, transform 200ms, background 200ms, opacity 200ms;
+      mix-blend-mode:screen;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.25);
+      backdrop-filter: blur(2px);
+      will-change:transform,width,height,opacity;
+    }
+    .cursor.cursor-grow { width:48px; height:48px; transform:translate(-50%,-50%) scale(1.05); background: rgba(255,255,255,0.09); }
+    .cursor.cursor-hidden{ opacity:0 }
+
+    /* hover effect target for interactive elements */
+    .interactive { cursor:none; } /* hide default cursor on interactive elements for effect */
+
+    /* responsive tweaks */
+    @media (max-width:720px){
+      .cta{ padding:10px 18px; font-size:14px }
+      .made{ font-size:12px }
+      .video-wrap{ width:95vw; }
+    }
+
+    /* entrance states for staged reveal */
+    .reveal { opacity:1; transform:translateY(0); }
+    .fade-in-up { transform: translateY(14px); opacity:0; }
+    .visible { opacity:1; transform:none; transition:var(--transition) }
+
+    /* keyboard-focus visible */
+    a:focus-visible { outline: 3px solid rgba(255,255,255,0.14); outline-offset:6px }
   </style>
 </head>
 <body>
-  <h1>DANIK</h1>
 
-  <!-- Email link -->
-  <a href="mailto:dsakhno@isl.cy">EMAIL ME</a>
+  <!-- Subtle grain overlay -->
+  <div class="grain" aria-hidden="true"></div>
 
-  <!-- Google Drive video embed -->
-  <iframe src="https://drive.google.com/file/d/12n64x1mqA1nIdUYj4bPoosSBDo9wKQ9X/preview" allow="autoplay" allowfullscreen></iframe>
+  <main class="wrap" id="main">
+    <h1 id="title" class="fade-in-up">DANIK</h1>
 
-  <!-- Footer text with glow -->
-  <p>MADE BY DANIK</p>
+    <a class="cta interactive" id="emailBtn" href="mailto:dsakhno@isl.cy" aria-label="Email Danik">EMAIL ME</a>
+
+    <!-- Video card (iframe from Google Drive) -->
+    <div class="video-wrap fade-in-up" id="videoCard" tabindex="0" role="region" aria-label="Video player. Press to focus and play.">
+      <!-- Google Drive preview link -->
+      <iframe
+        id="driveFrame"
+        src="https://drive.google.com/file/d/13yvKrjUPm7hGUv2gKLZNuN00nsCYZMjv/preview"
+        allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+        allowfullscreen
+        title="Danik's video (Google Drive)">
+      </iframe>
+    </div>
+
+    <!-- Fallback link in case embed blocked -->
+    <a class="fallback" href="https://drive.google.com/file/d/13yvKrjUPm7hGUv2gKLZNuN00nsCYZMjv/view?usp=sharing" target="_blank" rel="noopener">
+      OPEN VIDEO IN DRIVE (FALLBACK)
+    </a>
+
+    <!-- Footer made by -->
+    <div class="made glow fade-in-up" id="made">MADE BY DANIK</div>
+  </main>
+
+  <!-- Custom cursor element -->
+  <div class="cursor" id="cursor" aria-hidden="true"></div>
+
+  <script>
+    /* ==========================
+       STAGED ANIMATIONS + INTERACTIONS
+       ========================== */
+
+    // Simple helpers
+    const qs = (sel, ctx = document) => ctx.querySelector(sel);
+    const qsa = (sel, ctx = document) => Array.from(ctx.querySelectorAll(sel));
+
+    // Reveal animations using IntersectionObserver
+    document.addEventListener('DOMContentLoaded', () => {
+      const revealables = qsa('.fade-in-up');
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((e, i) => {
+          if (e.isIntersecting) {
+            // stagger
+            setTimeout(() => {
+              e.target.classList.add('visible');
+              e.target.style.opacity = 1;
+              e.target.style.transform = 'none';
+            }, (Array.from(revealables).indexOf(e.target) * 120) + 100);
+            io.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.12 });
+
+      revealables.forEach(el => io.observe(el));
+    });
+
+    /* ========== CUSTOM CURSOR LOGIC ========== */
+    (function(){
+      const cursor = qs('#cursor');
+      let mouseX = -9999, mouseY = -9999, raf;
+      let visible = true;
+
+      // move cursor
+      window.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX; mouseY = e.clientY;
+        cursor.style.left = mouseX + 'px';
+        cursor.style.top = mouseY + 'px';
+        cursor.classList.remove('cursor-hidden');
+      });
+
+      // hide cursor when leaving window
+      window.addEventListener('mouseleave', () => cursor.classList.add('cursor-hidden'));
+      window.addEventListener('mouseenter', () => cursor.classList.remove('cursor-hidden'));
+
+      // enlarge when hovering interactive elements
+      const interactives = qsa('.interactive, a, button, .video-wrap, iframe');
+      interactives.forEach(node => {
+        node.addEventListener('mouseenter', () => cursor.classList.add('cursor-grow'));
+        node.addEventListener('mouseleave', () => cursor.classList.remove('cursor-grow'));
+      });
+
+      // hide native cursor globally for a slick look on wide screens
+      if (window.innerWidth > 720) document.documentElement.style.cursor = 'none';
+    })();
+
+    /* ========== MOUSE PARALLAX/TILT FOR VIDEO ========= */
+    (function(){
+      const card = qs('#videoCard');
+      if(!card) return;
+      const strength = 12; // degrees max
+
+      card.addEventListener('pointermove', (ev) => {
+        const rect = card.getBoundingClientRect();
+        const cx = rect.left + rect.width / 2;
+        const cy = rect.top + rect.height / 2;
+        const dx = ev.clientX - cx;
+        const dy = ev.clientY - cy;
+        const rx = (dy / rect.height) * strength;
+        const ry = -(dx / rect.width) * strength;
+        card.style.transform = `translateY(-14px) rotateX(${rx}deg) rotateY(${ry}deg) scale(1.01)`;
+      });
+
+      card.addEventListener('pointerleave', () => {
+        card.style.transform = '';
+      });
+    })();
+
+    /* ========== KEYBOARD PLAY HINT (accessibility) ========== */
+    (function(){
+      const iframe = qs('#driveFrame');
+      const card = qs('#videoCard');
+      card.addEventListener('keydown', (e) => {
+        // if user presses Enter or Space while focused on card, focus iframe (user can then press play)
+        if(e.key === 'Enter' || e.key === ' '){
+          e.preventDefault();
+          iframe.focus();
+        }
+      });
+    })();
+
+    /* ========== SAFETY: If Google Drive blocks previews on some hosts, show a helpful console note ========== */
+    (function(){
+      // Check iframe load (some browsers block cross-origin info; we still handle gracefully)
+      const iframe = qs('#driveFrame');
+      iframe.addEventListener('load', () => {
+        // nothing to do on success; many browsers allow preview
+      });
+      setTimeout(() => {
+        // if the iframe height is tiny (blocked), notify user visually (no alerts)
+        if(iframe.clientHeight < 50){
+          qs('.fallback').style.opacity = 1;
+        }
+      }, 1800);
+    })();
+
+    /* ========== OPTIONAL: TINY INTRO FOCUS SEQUENCE ========== */
+    window.addEventListener('load', () => {
+      setTimeout(() => { qs('#title').style.opacity=1; qs('#title').style.transform='none'; }, 160);
+      setTimeout(() => { qs('#emailBtn').style.opacity=1; qs('#emailBtn').style.transform='none'; }, 380);
+      setTimeout(() => { qs('#videoCard').style.opacity=1; qs('#videoCard').style.transform='none'; }, 560);
+      setTimeout(() => { qs('#made').style.opacity=1; qs('#made').style.transform='none'; }, 860);
+    });
+  </script>
 </body>
 </html>

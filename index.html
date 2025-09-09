@@ -25,6 +25,7 @@
       font-size: 5rem;
       font-weight: 800; /* Extra Bold */
       margin-bottom: 20px;
+      letter-spacing: 3px;
     }
 
     a {
@@ -37,6 +38,7 @@
       transition: background 0.3s, color 0.3s;
       display: inline-block;
       margin-bottom: 30px;
+      font-weight: 800;
     }
 
     a:hover {
@@ -44,11 +46,22 @@
       color: #000;
     }
 
-    video {
-      max-width: 90%;
+    iframe {
+      width: 80vw;
+      height: 45vw; /* 16:9 ratio */
+      max-width: 1000px;
+      max-height: 562px;
       border: 3px solid #fff;
       border-radius: 15px;
       box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+      margin-bottom: 20px;
+    }
+
+    p {
+      font-size: 0.9rem;
+      font-weight: 800;
+      letter-spacing: 2px;
+      margin-top: 20px;
     }
   </style>
 </head>
@@ -56,12 +69,12 @@
   <h1>DANIK</h1>
 
   <!-- Email link -->
-  <a href="mailto:dsakhno@isl.cy">Email Me</a>
+  <a href="mailto:dsakhno@isl.cy">EMAIL ME</a>
 
-  <!-- Video player -->
-  <video controls>
-    <source src="https://drive.google.com/uc?export=download&id=13yvKrjUPm7hGUv2gKLZNuN00nsCYZMjv" type="video/mp4">
-    Your browser does not support the video tag.
-  </video>
+  <!-- Google Drive video embed -->
+  <iframe src="https://drive.google.com/file/d/13yvKrjUPm7hGUv2gKLZNuN00nsCYZMjv/preview" allow="autoplay" allowfullscreen></iframe>
+
+  <!-- Footer text -->
+  <p>MADE BY DANIK</p>
 </body>
 </html>
